@@ -232,7 +232,43 @@
         "scripts/ubuntu/networking.sh",
         "scripts/ubuntu/sudoers.sh",
         "scripts/ubuntu/vagrant.sh",
-        "scripts/common/vmtools.sh",
+        "scripts/common/vmtools.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "echo 'Bootstrapping salt.'",
+        "echo deb http://ppa.launchpad.net/saltstack/salt/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/sources.list.d/saltstack.list",
+        "wget -q -O- 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4759FA960E27C0A6' | sudo apt-key add -",
+        "sudo apt-get update",
+        "sudo apt-get install -y salt-minion"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "{{ user `salt_local_state_tree` }}",
+      "destination": "/tmp/salt"
+    },
+    {
+      "type": "file",
+      "source": "{{ user `salt_local_minion_config` }}",
+      "destination": "/tmp/salt/minion_config"
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+      "type": "shell",
+      "inline": [
+        "cp -r /tmp/salt /srv/salt",
+        "cp -r /tmp/salt/minion_config /etc/salt/minion",
+        "salt-call --local state.highstate",
+        "service mysql stop"
+      ]
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+      "scripts": [
         "scripts/ubuntu/cleanup.sh",
         "scripts/common/minimize.sh"
       ],
@@ -256,7 +292,8 @@
     "no_proxy": "{{env `no_proxy`}}",
     "preseed_path": "ubuntu-14.04/preseed.cfg",
     "template": "ubuntu-14.04-amd64",
-    "version": "2.1.TIMESTAMP"
+    "version": "2.1.TIMESTAMP",
+    "salt_local_state_tree": "",
+    "salt_local_minion_config": ""
   }
 }
-
