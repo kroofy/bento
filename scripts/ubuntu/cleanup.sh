@@ -30,9 +30,6 @@ dpkg --list \
 # Delete compilers and other development tools
 apt-get -y purge cpp gcc g++;
 
-# Delete X11 libraries
-apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6;
-
 # Delete obsolete networking
 apt-get -y purge ppp pppconfig pppoeconf;
 
