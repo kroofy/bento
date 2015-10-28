@@ -1,3 +1,31 @@
+# Note
+
+The changes here are only targets Ubuntu 14.04 amd64.
+
+This fork was created because:
+
+- We couldn't get the built-in Salt provisioning to work, environments couldn't be found. Fixed by using custom shell provisioning and copying of needed files.
+- The cleanup script was purging packages we needed.
+
+## Usage
+
+You need to specify the path to the Salt state tree and `minion_config` you wish to use. Since we have the pillars located in the state tree we only need to specify two variables related to Salt.
+
+We also recommend to use the `template` and `box_basename` variables to give the box a nice hostname and filename respectively.
+
+The resulting command looks something like this:
+
+```
+packer build \
+-var 'template=am-basebox-vm' \
+-var 'box_basename=am-basebox-vm' \
+-var 'salt_local_state_tree=/path/to/salt/state_tree' \
+-var 'salt_local_minion_config=/path/to/salt/minion_config' \
+ubuntu-14.04-amd64.json
+```
+
+---
+
 # Bento
 
 [![Build Status](http://img.shields.io/travis/chef/bento.svg)][travis]
