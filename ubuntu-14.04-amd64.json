@@ -239,10 +239,11 @@
     {
       "type": "shell",
       "inline": [
-        "echo 'Bootstrapping salt.'",
-        "echo deb http://ppa.launchpad.net/saltstack/salt/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/sources.list.d/saltstack.list",
-        "wget -q -O- 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4759FA960E27C0A6' | sudo apt-key add -",
-        "sudo apt-get update",
+        "echo \"deb http://repo.saltstack.com/apt/ubuntu/ubuntu14/latest trusty main\" | sudo tee /etc/apt/sources.list.d/saltstack.list",
+        "wget -q -O- https://repo.saltstack.com/apt/ubuntu/ubuntu14/latest/SALTSTACK-GPG-KEY.pub | sudo apt-key add -",
+        "sudo apt-key update",
+        "sudo apt-get -y update",
+        "DEBIAN_FRONTEND=noninteractive sudo apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" dist-upgrade",
         "sudo apt-get install -y salt-minion"
       ]
     },
